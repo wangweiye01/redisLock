@@ -156,8 +156,6 @@ class RedisLockApplicationTests {
         System.out.println("主线程写锁释放");
 
         t.join();
-
-        redissonClient.shutdown();
     }
 
     /**
@@ -250,16 +248,14 @@ class RedisLockApplicationTests {
         System.out.println("主线程lock1,lock2,lock3加锁成功");
         lock.unlock();
         System.out.println("主线程lock1,lock2,lock3解锁成功");
-
-        client1.shutdown();
-        client2.shutdown();
     }
 
 
     @Test
     void semaphore() throws InterruptedException {
         RSemaphore s = redissonClient.getSemaphore("test");
-        s.trySetPermits(5);
+        // s.trySetPermits(5);
+        s.addPermits(5);
         s.acquire(3);
         System.out.println("获得3个信号量，还剩2个");
         Thread t = new Thread() {
@@ -277,7 +273,5 @@ class RedisLockApplicationTests {
 
         s.acquire(4);
         System.out.println("再获得4个");
-
-        redissonClient.shutdown();
     }
 }
